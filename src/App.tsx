@@ -267,7 +267,7 @@ export default function App() {
                 <h2>Type Matchups</h2>
 
                 <div className="matchup-section">
-                  <h3>Weaknesses</h3>
+                  <h3>Debilidades</h3>
                   <div className="matchup-list">
                     {weaknesses.map(({ type, multiplier }) => {
                       const meta = typeMeta[type];
@@ -288,7 +288,7 @@ export default function App() {
                 </div>
 
                 <div className="matchup-section">
-                  <h3>Resistances</h3>
+                  <h3>Resistencias</h3>
                   <div className="matchup-list">
                     {resistances.map(({ type, multiplier }) => {
                       const meta = typeMeta[type];
@@ -309,7 +309,7 @@ export default function App() {
                 </div>
 
                 <div className="matchup-section">
-                  <h3>Immunities</h3>
+                  <h3>Inmunidades</h3>
                   <div className="matchup-list">
                     {immunities.map(({ type }) => {
                       const meta = typeMeta[type];
