@@ -7,6 +7,7 @@ import {fetchPokemonList} from "./api/pokemonList";
 import type { PokemonListItem } from "./api/pokemonList";
 import { PokemonSearch } from "./components/PokemonSearch";
 import "./index.css";
+import { NatureSelect } from "./components/NatureSelect";
 
 const STORAGE_KEY = "pokemon-stat-calculator-state";
 
@@ -185,9 +186,9 @@ export default function App() {
       <section className="card header-card">
         <div>
           <p className="eyebrow">Alan's PokeCalculator</p>
-          <h1>Stat Calculator</h1>
+          <h1>Calculadora de Stats</h1>
           <p className="subtitle">
-            Busca un Pokémon desde PokéAPI y calcula sus stats usando nivel,
+            Busca un Pokémon y calcula sus stats usando nivel,
             IVs, EVs y naturaleza.
           </p>
         </div>
@@ -210,8 +211,8 @@ export default function App() {
 
         <p className="small-text">
           Tip: usa nombres en inglés o el número de Pokédex. Ejemplo:
-          <strong> garchomp</strong>, <strong>charizard</strong>,{" "}
-          <strong>887</strong>.
+          <strong> Meowscarada</strong>{" o "}
+          <strong>908</strong>.
         </p>
       </section>
 
@@ -219,7 +220,7 @@ export default function App() {
         <>
           <section className="grid">
             <div className="card">
-              <h2>Configuración</h2>
+              <h2>Descripción</h2>
 
               <div className="pokemon-hero">
                 <div className="pokemon-art">
@@ -272,18 +273,11 @@ export default function App() {
 
               <label className="field">
                 <span>Naturaleza</span>
-                <select
+                <NatureSelect
                   value={selectedNatureName}
-                  onChange={(event) =>
-                    setSelectedNatureName(event.target.value)
-                  }
-                >
-                  {natures.map((nature) => (
-                    <option key={nature.name} value={nature.name}>
-                      {nature.name}
-                    </option>
-                  ))}
-                </select>
+                  natures={natures}
+                  onChange={setSelectedNatureName}
+                />
               </label>
             </div>
 
