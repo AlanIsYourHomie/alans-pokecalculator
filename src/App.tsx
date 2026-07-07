@@ -264,7 +264,7 @@ export default function App() {
               </div>
 
               <section className="card matchups-card">
-                <h2>Type Matchups</h2>
+                <h2>Sinergías de Tipos</h2>
 
                 <div className="matchup-section">
                   <h3>Debilidades</h3>
