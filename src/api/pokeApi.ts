@@ -31,7 +31,44 @@ type PokeApiPokemonResponse = {
       name: PokeApiStatName;
     };
   }>;
+  species: {
+    name: string;
+    url: string;
+  };
 };
+
+type PokeApiSpeciesResponse = {
+  varieties: Array<{
+    is_default: boolean;
+    pokemon: {
+      name: string;
+      url: string;
+    };
+  }>;
+};
+
+export async function fetchPokemonMegaForms(query: string) {
+  const pokemon = await fetchPokemon(query);
+
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.id}`);
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const species = (await response.json()) as PokeApiSpeciesResponse;
+
+  return species.varieties
+    .filter((item) => item.pokemon.name.includes("-mega"))
+    .map((item) => {
+      const name = item.pokemon.name;
+
+      return {
+        label: formatPokemonName(name.replace(`${pokemon.name.toLowerCase().replaceAll(" ", "-")}-`, "")),
+        query: name,
+      };
+    });
+}
 
 const statNameMap: Record<PokeApiStatName, StatKey> = {
   hp: "hp",

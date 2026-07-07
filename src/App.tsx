@@ -10,6 +10,8 @@ import "./index.css";
 import { NatureSelect } from "./components/NatureSelect";
 import {calculateTypeMatchups} from "./logic/calculateTypeMatchups";
 import {typeMeta} from "./data/typeMeta";
+import {fetchPokemonMegaForms } from "./api/pokeApi";
+import type { PokemonFormOption } from "./types/pokemon";
 
 const STORAGE_KEY = "pokemon-stat-calculator-state";
 
@@ -114,6 +116,10 @@ export default function App() {
   );
   const immunities = typeMatchups.filter((item) => item.multiplier === 0);
 
+  const [basePokemonQuery, setBasePokemonQuery] = useState("");
+  const [megaForms, setMegaForms] = useState<PokemonFormOption[]>([]);
+  const [activeFormQuery, setActiveFormQuery] = useState<string | null>(null);
+
   useEffect(() => {
     async function loadPokemonList() {
       try {
@@ -127,21 +133,42 @@ export default function App() {
     loadPokemonList();
   }, []);
 
-  async function loadPokemon(query: string) {
+  async function loadPokemon(query: string, options?: { keepForms?: boolean }) {
     try {
       setIsLoading(true);
       setErrorMessage("");
 
       const result = await fetchPokemon(query);
       setPokemon(result);
+
+      if (!options?.keepForms) {
+        setBasePokemonQuery(query);
+        setActiveFormQuery(null);
+
+        const forms = await fetchPokemonMegaForms(query);
+        setMegaForms(forms);
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Ocurrió un error inesperado.";
 
       setErrorMessage(message);
+      setMegaForms([]);
+      setActiveFormQuery(null);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function handleFormToggle(query: string | null) {
+    if (query === null) {
+      setActiveFormQuery(null);
+      loadPokemon(basePokemonQuery, { keepForms: true });
+      return;
+    }
+
+    setActiveFormQuery(query);
+    loadPokemon(query, { keepForms: true });
   }
 
   useEffect(() => {
@@ -223,6 +250,28 @@ export default function App() {
           <strong> Meowscarada</strong>{" o "}
           <strong>908</strong>.
         </p>
+        {megaForms.length > 0 && (
+  <div className="form-switch">
+    <button
+      type="button"
+      className={activeFormQuery === null ? "form-button active" : "form-button"}
+      onClick={() => handleFormToggle(null)}
+    >
+      Base
+    </button>
+
+    {megaForms.map((form) => (
+      <button
+        key={form.query}
+        type="button"
+        className={activeFormQuery === form.query ? "form-button active" : "form-button"}
+        onClick={() => handleFormToggle(form.query)}
+      >
+        {form.label}
+      </button>
+    ))}
+  </div>
+)}
       </section>
 
       {pokemon && finalStats && (

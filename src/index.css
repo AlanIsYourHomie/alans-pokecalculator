@@ -870,3 +870,31 @@ h3 {
 .matchup-chip-muted {
   opacity: 0.58;
 }
+
+.form-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.form-button {
+  border: 1px solid rgba(236, 72, 153, 0.22);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  background: rgba(255, 255, 255, 0.75);
+  color: #7e4b88;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.form-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(236, 72, 153, 0.45);
+}
+
+.form-button.active {
+  background: linear-gradient(135deg, #f9a8d4, #ec4899, #a855f7);
+  color: white;
+  box-shadow: 0 12px 24px rgba(236, 72, 153, 0.22);
+}

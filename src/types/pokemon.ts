@@ -15,3 +15,8 @@ export type Nature = {
   increased?: StatKey;
   decreased?: StatKey;
 };
+
+export type PokemonFormOption = {
+  label: string;
+  query: string;
+};
