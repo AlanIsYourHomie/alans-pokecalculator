@@ -84,7 +84,7 @@ export async function fetchPokemon(query: string): Promise<Pokemon> {
 
   const types = data.types
     .sort((a, b) => a.slot - b.slot)
-    .map((item) => formatPokemonName(item.type.name));
+    .map((item) => item.type.name);
 
   const sprite =
     data.sprites.other?.["official-artwork"]?.front_default ??

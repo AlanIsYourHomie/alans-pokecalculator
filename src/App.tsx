@@ -8,6 +8,8 @@ import type { PokemonListItem } from "./api/pokemonList";
 import { PokemonSearch } from "./components/PokemonSearch";
 import "./index.css";
 import { NatureSelect } from "./components/NatureSelect";
+import {calculateTypeMatchups} from "./logic/calculateTypeMatchups";
+import {typeMeta} from "./data/typeMeta";
 
 const STORAGE_KEY = "pokemon-stat-calculator-state";
 
@@ -105,7 +107,14 @@ export default function App() {
 
   const totalEvs = statKeys.reduce((total, stat) => total + evs[stat], 0);
 
-    useEffect(() => {
+  const typeMatchups = pokemon ? calculateTypeMatchups(pokemon.types) : [];
+  const weaknesses = typeMatchups.filter((item) => item.multiplier > 1);
+  const resistances = typeMatchups.filter(
+    (item) => item.multiplier > 0 && item.multiplier < 1
+  );
+  const immunities = typeMatchups.filter((item) => item.multiplier === 0);
+
+  useEffect(() => {
     async function loadPokemonList() {
       try {
         const result = await fetchPokemonList();
@@ -236,27 +245,90 @@ export default function App() {
                   <h3>{pokemon.name}</h3>
 
                   <div className="type-list">
-                    {pokemon.types.map((type) => (
-                      <span className="type-chip" key={type}>
-                        {type}
-                      </span>
-                    ))}
+                    {pokemon.types.map((type) => {
+                      const meta = typeMeta[type as keyof typeof typeMeta];
+
+                      return (
+                        <span
+                          key={type}
+                          className="type-chip"
+                          style={{ backgroundColor: meta.color }}
+                        >
+                          <img src={meta.icon} alt="" className="type-icon" />
+                          {meta.label}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
 
-              <div className="base-stats">
-                <h3>Base Stats</h3>
+              <section className="card matchups-card">
+                <h2>Type Matchups</h2>
 
-                <div className="base-stat-grid">
-                  {statKeys.map((stat) => (
-                    <div className="base-stat-tile" key={stat}>
-                      <span>{statLabels[stat]}</span>
-                      <strong>{pokemon.baseStats[stat]}</strong>
-                    </div>
-                  ))}
+                <div className="matchup-section">
+                  <h3>Weaknesses</h3>
+                  <div className="matchup-list">
+                    {weaknesses.map(({ type, multiplier }) => {
+                      const meta = typeMeta[type];
+
+                      return (
+                        <span
+                          key={type}
+                          className="matchup-chip"
+                          style={{ backgroundColor: meta.color }}
+                        >
+                          <img src={meta.icon} alt="" className="type-icon" />
+                          {meta.label}
+                          <strong>{multiplier}×</strong>
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+
+                <div className="matchup-section">
+                  <h3>Resistances</h3>
+                  <div className="matchup-list">
+                    {resistances.map(({ type, multiplier }) => {
+                      const meta = typeMeta[type];
+
+                      return (
+                        <span
+                          key={type}
+                          className="matchup-chip matchup-chip-soft"
+                          style={{ backgroundColor: meta.color }}
+                        >
+                          <img src={meta.icon} alt="" className="type-icon" />
+                          {meta.label}
+                          <strong>{multiplier}×</strong>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="matchup-section">
+                  <h3>Immunities</h3>
+                  <div className="matchup-list">
+                    {immunities.map(({ type }) => {
+                      const meta = typeMeta[type];
+
+                      return (
+                        <span
+                          key={type}
+                          className="matchup-chip matchup-chip-muted"
+                          style={{ backgroundColor: meta.color }}
+                        >
+                          <img src={meta.icon} alt="" className="type-icon" />
+                          {meta.label}
+                          <strong>0×</strong>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </section>
 
               <label className="field">
                 <span>Nivel</span>
@@ -282,6 +354,20 @@ export default function App() {
             </div>
 
             <div className="card">
+              
+
+              <div className="base-stats">
+                <h3>Base Stats</h3>
+
+                <div className="base-stat-grid">
+                  {statKeys.map((stat) => (
+                    <div className="base-stat-tile" key={stat}>
+                      <span>{statLabels[stat]}</span>
+                      <strong>{pokemon.baseStats[stat]}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="section-title-row">
                 <h2>Resultado</h2>
                 <span className="pill">Nivel {level}</span>

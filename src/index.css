@@ -814,3 +814,59 @@ h3 {
   background: rgba(168, 85, 247, 0.12);
   color: #7e22ce;
 }
+
+.type-list,
+.matchup-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.type-chip,
+.matchup-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  color: white;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 10px 20px rgba(59, 23, 63, 0.12);
+}
+
+.type-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.matchups-card {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.matchup-section {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.matchup-section h3 {
+  margin: 0;
+  color: #7e4b88;
+}
+
+.matchup-chip strong {
+  margin-left: 0.15rem;
+  padding: 0.16rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.matchup-chip-soft {
+  opacity: 0.78;
+}
+
+.matchup-chip-muted {
+  opacity: 0.58;
+}
